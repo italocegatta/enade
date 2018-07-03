@@ -8,8 +8,8 @@ library(magrittr)
 
 
 # input -------------------------------------------------------------------
-
-# load("data/base_enade.rda")
+#getwd()
+load("C:/Users/Italo/Github/enadedata/base_enade.rda")
 
 # dplyr::glimpse(base_enade)
 
@@ -81,8 +81,8 @@ server <- function(input, output) {
     req(input$in_universidade)
 
     base_enade %>%
-      dplyr::filter(nome_da_ies == input$in_universidade) %>%
       dplyr::filter(ano == input$in_ano) %>%
+      dplyr::filter(nome_da_ies == input$in_universidade) %>%
       dplyr::pull(area_de_enquadramento) %>%
       unique()
   })
@@ -95,19 +95,24 @@ server <- function(input, output) {
     )
   })
 
-  # filtro de modalidade
-  l_modalidade <- base_enade %>%
-      dplyr::filter(ano == input$in_ano) %>%
-      dplyr::pull(modalidade_de_ensino) %>%
-      unique()
-
-  output$ui_modalidade = renderUI({
-    pickerInput(
-      "in_modalidade", "Modalidade de Ensino",
-      choices = l_modalidade, multiple = TRUE, selected = l_modalidade,
-      options = list(`actions-box` = TRUE)
-    )
-  })
+  #filtro de modalidade
+  # l_modalidade <- reactive({
+  #
+  #   req(input$in_universidade)
+  #
+  #   base_enade %>%
+  #     dplyr::filter(ano == input$in_ano) %>%
+  #     dplyr::pull(modalidade_de_ensino) %>%
+  #     unique()
+  # })
+  #
+  # output$ui_modalidade = renderUI({
+  #   pickerInput(
+  #     "in_modalidade", "Modalidade de Ensino",
+  #     choices = l_modalidade(), multiple = TRUE, selected = l_modalidade(),
+  #     options = list(`actions-box` = TRUE)
+  #   )
+  # })
 
 
   # filtro de org academica
@@ -115,7 +120,6 @@ server <- function(input, output) {
 
     base_enade %>%
       dplyr::filter(ano == input$in_ano) %>%
-      dplyr::filter(modalidade_de_ensino %in% input$in_modalidade) %>%
       dplyr::pull(organizacao_academica) %>%
       unique()
   })
@@ -135,7 +139,6 @@ server <- function(input, output) {
     base_enade %>%
       dplyr::filter(ano == input$in_ano) %>%
       dplyr::filter(
-        modalidade_de_ensino %in% input$in_modalidade,
         organizacao_academica %in% input$in_org_academica
       ) %>%
       dplyr::pull(categoria_administrativa) %>%
@@ -157,7 +160,6 @@ server <- function(input, output) {
     base_enade %>%
       dplyr::filter(ano == input$in_ano) %>%
       dplyr::filter(
-        modalidade_de_ensino %in% input$in_modalidade,
         organizacao_academica %in% input$in_org_academica,
         categoria_administrativa %in% input$in_categ_adminstrativa
       ) %>%
@@ -180,7 +182,6 @@ server <- function(input, output) {
     base_enade %>%
       dplyr::filter(ano == input$in_ano) %>%
       dplyr::filter(
-        modalidade_de_ensino %in% input$in_modalidade,
         organizacao_academica %in% input$in_org_academica,
         categoria_administrativa %in% input$in_categ_adminstrativa,
         sigla_da_uf %in% input$in_estado
@@ -223,7 +224,6 @@ server <- function(input, output) {
       dplyr::filter(ano == input$in_ano) %>%
       dplyr::select(-codigo_da_ies) %>%
       dplyr::filter(
-        modalidade_de_ensino %in% input$in_modalidade,
         organizacao_academica %in% input$in_org_academica,
         categoria_administrativa %in% input$in_categ_adminstrativa,
         sigla_da_uf %in% input$in_estado,
