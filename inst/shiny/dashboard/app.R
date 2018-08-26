@@ -66,7 +66,7 @@ server <- function(input, output) {
   output$ui_universidade = renderUI({
     selectInput(
       "in_universidade", "Instituição de Ensino",
-      choices = l_universidade,  selected = "CENTRO UNIVERSITÁRIO DE VÁRZEA GRANDE"
+      choices = l_universidade #, selected = "CENTRO UNIVERSITÁRIO DE VÁRZEA GRANDE"
     )
   })
 
@@ -87,7 +87,7 @@ server <- function(input, output) {
 
     selectInput(
       "in_curso", "Curso",
-      choices = l_curso(),  selected = "AGRONOMIA"
+      choices = l_curso() #, selected = "AGRONOMIA"
     )
   })
 
@@ -109,7 +109,7 @@ server <- function(input, output) {
   output$ui_ano = renderUI({
     selectInput(
       "in_ano", "Ano de referência",
-      choices = l_ano(),  selected = 2016
+      choices = l_ano() #, selected = 2016
     )
   })
 

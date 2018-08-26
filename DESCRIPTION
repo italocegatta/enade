@@ -1,10 +1,19 @@
 Package: enade
-Title: Permite analise dos dados da prova d ENADE
+Title: Base de dados e dashboard das ultimas provas do ENADE
 Version: 0.0.0.9000
 Authors@R: person("Italo", "Cegatta", email = "italoegatta@example.com", role = c("aut", "cre"))
-Description: Pacote com dados compilados de todas as provas do ENADA
+Description: Os dados foram compilados manualmente e estao disponiveis como um data frame no pacote. Ha um dashboard disponeivel para analisar as principais metricas da prova
 Depends: R (>= 3.4.3)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
+Imports: 
+    dplyr,
+    magrittr,
+    stringr,
+    tidyr,
+    ggplot2,
+    shiny,
+    shinydashboard,
+    shinyWidgets
