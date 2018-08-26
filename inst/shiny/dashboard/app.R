@@ -5,7 +5,7 @@ library(shiny)
 library(shinydashboard)
 library(shinyWidgets)
 library(magrittr)
-
+library(enade)
 
 # main input -------------------------------------------------------------------
 
@@ -16,12 +16,13 @@ library(magrittr)
 # main ui --------------------------------------------------------------------
 
 ui <- dashboardPage(
-  dashboardHeader(title = "ENADE"),
+  skin = "black",
+  dashboardHeader(title = "Notas ENADE"),
   dashboardSidebar(
       width = 300,
-      uiOutput("ui_ano"),
       uiOutput("ui_universidade"),
-      uiOutput("ui_curso")
+      uiOutput("ui_curso"),
+      uiOutput("ui_ano")
   ),
   dashboardBody(
     fluidPage(
@@ -56,54 +57,28 @@ ui <- dashboardPage(
 
 server <- function(input, output) {
 
-
   # sidebar define ano de consulta ------------------------------------------
 
-  l_ano <- base_enade %>%
-    dplyr::pull(ano) %>%
+  l_universidade <- base_enade %>%
+    dplyr::pull(nome_da_ies) %>%
     unique()
-
-  output$ui_ano = renderUI({
-    selectInput(
-      "in_ano", "Ano de referência",
-      choices = l_ano,  selected = 2016
-    )
-  })
-
-
-  # sidebar define universidade ---------------------------------------------
-
-  l_universidade <- reactive({
-
-    req(input$in_ano)
-
-    base_enade %>%
-      dplyr::filter(ano == input$in_ano) %>%
-      dplyr::pull(nome_da_ies) %>%
-      unique()
-  })
 
   output$ui_universidade = renderUI({
     selectInput(
       "in_universidade", "Instituição de Ensino",
-      choices = l_universidade(),  selected = "CENTRO UNIVERSITÁRIO DE VÁRZEA GRANDE"
+      choices = l_universidade,  selected = "CENTRO UNIVERSITÁRIO DE VÁRZEA GRANDE"
     )
   })
-
 
 
   # sidebar define curso ----------------------------------------------------
 
   l_curso <- reactive({
 
-    req(input$in_ano)
     req(input$in_universidade)
 
     base_enade %>%
-      dplyr::filter(
-        ano == input$in_ano,
-        nome_da_ies == input$in_universidade
-      ) %>%
+      dplyr::filter(nome_da_ies == input$in_universidade) %>%
       dplyr::pull(area_de_enquadramento) %>%
       unique()
   })
@@ -113,6 +88,28 @@ server <- function(input, output) {
     selectInput(
       "in_curso", "Curso",
       choices = l_curso(),  selected = "AGRONOMIA"
+    )
+  })
+
+  # sidebar define ano de consulta ------------------------------------------
+
+  l_ano <- reactive({
+
+    req(input$in_universidade)
+    req(input$in_curso)
+
+    base_enade %>%
+      dplyr::filter(
+        nome_da_ies == input$in_universidade,
+        area_de_enquadramento == input$in_curso) %>%
+      dplyr::pull(ano) %>%
+      unique()
+  })
+
+  output$ui_ano = renderUI({
+    selectInput(
+      "in_ano", "Ano de referência",
+      choices = l_ano(),  selected = 2016
     )
   })
 
@@ -312,7 +309,7 @@ server <- function(input, output) {
         ) +
         ggplot2::geom_point(
           data = dplyr::filter(base_boxplot(), dummy == "sim"),
-          color = "white", fill = "#084594", alpha = 1, size = 7, shape = 21
+          color = "white", fill = "#084594", shape = 21, alpha = 1, size = 7, stroke = 1.5
         ) +
         ggplot2::facet_wrap(~indice, ncol = 2, scales = "free", labeller = ggplot2::labeller(indice = label_notas)) +
         ggplot2::labs(x = NULL, y = NULL) +
