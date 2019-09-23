@@ -1,0 +1,12 @@
+name: enade
+title: enade
+username:
+account: italocegatta
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 375973
+bundleId: 1469867
+url: https://italocegatta.shinyapps.io/enade/
+when: 1531008018.60322
+asMultiple: FALSE
+asStatic: FALSE
